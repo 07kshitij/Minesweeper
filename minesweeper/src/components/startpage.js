@@ -5,7 +5,7 @@ class StartPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedOption: '15',
+            selectedOption: '10',
         }
     }
 

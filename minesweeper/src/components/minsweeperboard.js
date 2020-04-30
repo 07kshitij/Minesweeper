@@ -1,10 +1,15 @@
 import Square from './square';
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 class MinesweeperBoard extends React.Component {
 
     constructor(props) {
         super(props);
+        if (this.props.location.data === undefined) {
+            this.props.history.push('/404');
+            return (undefined);
+        }
         const size = this.props.location.data;
         this.state = {
             size: size,
@@ -12,7 +17,6 @@ class MinesweeperBoard extends React.Component {
             grid: Array(size * size).fill(null),
             mines: Array(size * size).fill(0),
             adjacent: Array(size * size).fill(0),
-            isValid: true,
         }
         this.placeMines();
     }
@@ -65,16 +69,14 @@ class MinesweeperBoard extends React.Component {
     renderSquare(i) {
         return (<Square
             value={this.state.grid[i]}
-            onClick={() => this.handleClick(i)}
-        />
+            onClick={() => this.handleClick(i)} />
         );
     }
 
     renderSolution(i) {
         return (<Square
             value={this.state.mines[i]}
-            onClick={() => this.handleClick(i)}
-        />
+            onClick={() => this.handleClick(i)} />
         );
     }
 
@@ -110,6 +112,11 @@ class MinesweeperBoard extends React.Component {
     }
 
     render() {
+        if (this.props.location.data === undefined) {
+            return (
+                <Redirect to='/404' />
+            )
+        }
         return (
             this.createGrid()
         );

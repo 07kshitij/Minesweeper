@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
-// import ReactDOM from 'react-dom';
-// eslint-disable-next-line
 import MinesweeperBoard from './components/minsweeperboard';
 import StartPage from './components/startpage';
+import NotFound from './components/notFound';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 function App() {
@@ -13,16 +12,12 @@ function App() {
         <Switch>
           <Route exact path='/' component={StartPage} />
           <Route exact path='/board' component={MinesweeperBoard} />
+          <Route exact path='/404' component={NotFound} />
           <Redirect to='/' />
         </Switch>
       </BrowserRouter>
     </div>
   );
 }
-
-// ReactDOM.render(
-//     <App/>,
-//     document.getElementById('root')
-// )
 
 export default App;
