@@ -47,20 +47,26 @@ class StartPage extends React.Component {
                         <form onSubmit={this.handleFormSubmit.bind(this)}>
                             <div className="radio">
                                 <label>
-                                    <input type="radio" value="5" checked={this.state.selectedOption === '5'} onChange={this.handleOptionChange.bind(this)} />
-                        5
+                                    <input type="radio" value="5"
+                                        checked={this.state.selectedOption === '5'}
+                                        onChange={this.handleOptionChange.bind(this)} />
+                        5 x 5 ( ~ 10 mines)
                         </label>
                             </div>
                             <div className="radio">
                                 <label>
-                                    <input type="radio" value="10" checked={this.state.selectedOption === '10'} onChange={this.handleOptionChange.bind(this)} />
-                        10
+                                    <input type="radio" value="10"
+                                        checked={this.state.selectedOption === '10'}
+                                        onChange={this.handleOptionChange.bind(this)} />
+                        10 x 10 ( ~ 20 mines)
                         </label>
                             </div>
                             <div className="radio">
                                 <label>
-                                    <input type="radio" value="15" checked={this.state.selectedOption === '15'} onChange={this.handleOptionChange.bind(this)} />
-                        15
+                                    <input type="radio" value="15"
+                                        checked={this.state.selectedOption === '15'}
+                                        onChange={this.handleOptionChange.bind(this)} />
+                        15 x 15 ( ~ 30 mines)
                         </label>
                             </div>
                             <br />

@@ -1,6 +1,33 @@
 import Square from './square';
 import React from 'react';
+import GameLost from './gamelost';
 import { Redirect } from 'react-router-dom';
+
+class Stack{
+    constructor(){
+        this.items = [];
+    }
+
+    insert(element){
+        this.items.push(element);
+    }
+
+    remove(){
+        if(this.items.length === 0)
+            return "UnderFlow";
+        return this.items.pop();
+    }
+
+    top(){
+        if(this.items.length === 0)
+            return "Stack Empty";
+        return this.items[this.items.length - 1];
+    }
+
+    isEmpty(){
+        return this.items.length === 0;
+    }
+}
 
 class MinesweeperBoard extends React.Component {
 
@@ -24,10 +51,11 @@ class MinesweeperBoard extends React.Component {
         const size = prop;
         this.state = {
             size: size,
-            mineCnt: size,
+            mineCnt: 2 * size,
             grid: Array(size * size).fill(null),
             mines: Array(size * size).fill(0),
             adjacent: Array(size * size).fill(0),
+            bgColors: Array(size * size).fill('#cbcbcb'),
         }
         localStorage.setItem('state', JSON.stringify(this.state.size));
         this.placeMines();
@@ -74,14 +102,69 @@ class MinesweeperBoard extends React.Component {
 
     handleClick(i) {
         const square = this.state.grid.slice();
-        square[i] = 'X';
-        this.setState({ grid: square });
+        const colors = this.state.bgColors.slice();
+        square[i] = this.state.adjacent[i] ? this.state.adjacent[i] : '';
+        colors[i] = this.state.mines[i] ? 'red' : 'white';
+        if(colors[i] === 'white'){
+            this.showHints(i);
+        }else{
+            this.setState({
+                grid: square,
+                bgColors: colors
+            });
+            this.props.history.push('/result');
+        }
+    }
+
+    showHints(i){
+        const dx = [-1, 1, 0, 0], dy = [0, 0, -1, 1];
+        const size = this.state.size;
+
+        var visited = Array(size * size).fill(false);   visited[i] = true;
+
+        var items = []; items.push(i);
+        var stack = new Stack();
+        stack.insert(i);
+
+        // dfs
+        while(!stack.isEmpty()){
+            const top = stack.top();
+            stack.remove();
+            const x_ = Math.floor(top / size), y_ = top % size;
+            for(var k = 0; k < 4; k++){
+                var x = x_ + dx[k];
+                var y = y_ + dy[k];
+                if(x >= 0 && x < size && y >= 0 && y < size){
+                    if(visited[size*x + y] === false && this.state.mines[size*x + y] === 0){
+                        visited[size*x + y] = true;
+                        items.push(size*x + y);
+                        if(this.state.adjacent[size*x + y] === 0){
+                            stack.insert(size*x + y);
+                        }
+                    }
+                }
+            }
+        }
+        // setState
+        const square = this.state.grid.slice();
+        const colors = this.state.bgColors.slice();
+        for(k = 0; k < items.length; k++){
+            square[items[k]] = this.state.adjacent[items[k]] ? this.state.adjacent[items[k]] : '';
+            colors[items[k]] = this.state.mines[items[k]] ? 'red' : 'white';
+
+        }
+        this.setState({
+            grid: square,
+            bgColors: colors
+        });
     }
 
     renderSquare(i) {
         return (<Square
             value={this.state.grid[i]}
-            onClick={() => this.handleClick(i)} />
+            onClick={() => this.handleClick(i)} 
+            color={this.state.bgColors[i]}    
+            />
         );
     }
 

@@ -3,6 +3,7 @@ import './App.css';
 import MinesweeperBoard from './components/minsweeperboard';
 import StartPage from './components/startpage';
 import NotFound from './components/notFound';
+import GameLost from './components/gamelost';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 function App() {
@@ -10,10 +11,13 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Switch>
+
           <Route exact path='/' component={StartPage} />
           <Route exact path='/board' component={MinesweeperBoard} />
           <Route exact path='/404' component={NotFound} />
           <Route exact path='/solution' component={MinesweeperBoard} />
+          <Route exact path='/result' component={GameLost}/>
+
           <Redirect to='/' />
         </Switch>
       </BrowserRouter>
