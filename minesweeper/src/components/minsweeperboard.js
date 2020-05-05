@@ -6,11 +6,22 @@ class MinesweeperBoard extends React.Component {
 
     constructor(props) {
         super(props);
-        if (this.props.location.data === undefined) {
+
+        var prop = this.props.location.data;
+
+        if (prop === undefined) {
+            prop = localStorage.getItem('state') ? JSON.parse(localStorage.getItem('state')) : null;
+            // Check if state is cached
+        }
+
+        console.log(prop, null, prop === null);
+
+        if (prop === null) { // neither cached, nor passed from homepage
             this.props.history.push('/404');
             return (undefined);
         }
-        const size = this.props.location.data;
+
+        const size = prop;
         this.state = {
             size: size,
             mineCnt: size,
@@ -18,6 +29,7 @@ class MinesweeperBoard extends React.Component {
             mines: Array(size * size).fill(0),
             adjacent: Array(size * size).fill(0),
         }
+        localStorage.setItem('state', JSON.stringify(this.state.size));
         this.placeMines();
     }
 
@@ -84,10 +96,10 @@ class MinesweeperBoard extends React.Component {
         const size = this.state.size;
         let table = [];
         table.push(<div className="status"><center> Welcome to Minesweeper </center></div>)
-        table.push(<br />)
-        table.push(<br />)
-        table.push(<br />)
-        table.push(<br />)
+        // table.push(<br />); table.push(<br />); table.push(<br />);
+        // table.push(<div className="status"><center> ... Starting New Game ... </center></div>)
+        table.push(<br />); table.push(<br />); table.push(<br />); table.push(<br />);
+
         for (let i = 0; i < size; i++) {
             let child = [];
             for (let j = 0; j < size; j++) {
@@ -112,7 +124,7 @@ class MinesweeperBoard extends React.Component {
     }
 
     render() {
-        if (this.props.location.data === undefined) {
+        if (this.prop === null) {
             return (
                 <Redirect to='/404' />
             )

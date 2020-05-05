@@ -13,6 +13,7 @@ function App() {
           <Route exact path='/' component={StartPage} />
           <Route exact path='/board' component={MinesweeperBoard} />
           <Route exact path='/404' component={NotFound} />
+          <Route exact path='/solution' component={MinesweeperBoard} />
           <Redirect to='/' />
         </Switch>
       </BrowserRouter>
