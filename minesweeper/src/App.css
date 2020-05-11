@@ -41,13 +41,6 @@ ol, ul {
   display: table;
 }
 
-.status {
-  margin-bottom: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  float: left;
-  margin: 0%;
-}
 
 .square {
   background: #cbcbcb;
@@ -68,20 +61,24 @@ ol, ul {
   background-color: azure;
 }
 
-/* 
-.square:focus {
-  outline: none;
+.status {
+  font-size: 30px;
+  color: tomato;
+  font-weight: bold;
 }
 
-.kbd-navigation .square:focus {
-  background: #ddd;
-} */
-
-/* .game {
-  display: flex;
-  flex-direction: row;
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  overflow-x: hidden;
 }
 
-.game-info {
-  margin-left: 20px;
-} */
+.left{
+  left: 10%;
+  right: 50%;
+}
+.right{
+  left: 50%;
+  margin-top: 70px;
+}

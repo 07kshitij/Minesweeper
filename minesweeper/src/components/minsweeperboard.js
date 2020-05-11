@@ -2,6 +2,7 @@ import Square from './square';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Stack from './stack';
+import Timer from './timer'
 
 class MinesweeperBoard extends React.Component {
 
@@ -31,8 +32,9 @@ class MinesweeperBoard extends React.Component {
             adjacent: Array(size * size).fill(0),
             bgColors: Array(size * size).fill('#cbcbcb'),
             gameActive: true,
+            moves: 0,
         }
-        this.handleAlert = this.handleAlert.bind(this);
+        // this.handleAlert = this.handleAlert.bind(this);
 
         localStorage.setItem('state', JSON.stringify(this.state.size));
         this.placeMines();
@@ -77,8 +79,16 @@ class MinesweeperBoard extends React.Component {
         this.setState({ adjacent: square });
     }
 
-    handleAlert() {
-        alert(" Oops.. You stepped on a Mine !!\n ~~~ Game Over ~~~ ");
+    // handleAlert() {
+    //     alert(" Oops.. You stepped on a Mine !!\n ~~~ Game Over ~~~ ");
+    // }
+
+    refershPage(){
+        window.location.reload(false);
+    }
+
+    changeDifficulty() {
+        this.props.history.push('/');
     }
 
     handleClick(i) {
@@ -87,6 +97,9 @@ class MinesweeperBoard extends React.Component {
             const colors = this.state.bgColors.slice();
             square[i] = this.state.adjacent[i] ? this.state.adjacent[i] : '';
             colors[i] = this.state.mines[i] ? 'red' : 'white';
+            this.setState({
+                moves: this.state.moves + 1
+            })
             if (colors[i] === 'white') {
                 this.showHints(i);
             } else {
@@ -101,7 +114,7 @@ class MinesweeperBoard extends React.Component {
                     bgColors: colors,
                     gameActive: false
                 });
-                this.handleAlert();
+                // this.handleAlert();
             }
         }
     }
@@ -121,7 +134,7 @@ class MinesweeperBoard extends React.Component {
             const top = stack.top();
             stack.remove();
             const x_ = Math.floor(top / size), y_ = top % size;
-            for (var k = 0; k < 4; k++) {
+            for (let k = 0; k < 4; k++) {
                 var x = x_ + dx[k];
                 var y = y_ + dy[k];
                 if (x >= 0 && x < size && y >= 0 && y < size) {
@@ -138,7 +151,7 @@ class MinesweeperBoard extends React.Component {
         // setState
         const square = this.state.grid.slice();
         const colors = this.state.bgColors.slice();
-        for (k = 0; k < items.length; k++) {
+        for (let k = 0; k < items.length; k++) {
             square[items[k]] = this.state.adjacent[items[k]] ? this.state.adjacent[items[k]] : '';
             colors[items[k]] = this.state.mines[items[k]] ? 'red' : 'white';
 
@@ -167,9 +180,6 @@ class MinesweeperBoard extends React.Component {
     createGrid() {
         const size = this.state.size;
         let table = [];
-        table.push(<div className="status"><center> Welcome to Minesweeper </center></div>)
-        // table.push(<br />); table.push(<br />); table.push(<br />);
-        // table.push(<div className="status"><center> ... Starting New Game ... </center></div>)
         table.push(<br />); table.push(<br />); table.push(<br />); table.push(<br />);
 
         for (let i = 0; i < size; i++) {
@@ -202,7 +212,21 @@ class MinesweeperBoard extends React.Component {
             )
         }
         return (
-            this.createGrid()
+            <div className="Board">
+                <div className="status"><center> Welcome to Minesweeper </center></div>
+                <div className="split left">
+                    {this.createGrid()}
+                </div>
+                <div className="split right">
+                    <Timer />
+                    <br />
+                    Moves : {this.state.moves}
+                    <br /><br />
+                    <button onClick={this.refershPage.bind(this)}>Start Over</button>
+                    <br/><br/>
+                    <button onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
+                </div>
+            </div>
         );
     }
 }
