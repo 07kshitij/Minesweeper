@@ -83,7 +83,7 @@ class MinesweeperBoard extends React.Component {
     //     alert(" Oops.. You stepped on a Mine !!\n ~~~ Game Over ~~~ ");
     // }
 
-    refershPage(){
+    refershPage() {
         window.location.reload(false);
     }
 
@@ -220,11 +220,13 @@ class MinesweeperBoard extends React.Component {
                 <div className="split right">
                     <Timer />
                     <br />
-                    Moves : {this.state.moves}
+                    <div className = "moves">Moves : {this.state.moves}</div>                    
+                    <br />
+                    <button className = "actionButton" onClick={this.refershPage.bind(this)}>Start Over</button>
                     <br /><br />
-                    <button onClick={this.refershPage.bind(this)}>Start Over</button>
-                    <br/><br/>
-                    <button onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
+                    <button className = "actionButton" onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
+                    <br /><br />
+                    {this.state.gameActive === false && (<div className="result">Sorry You lost !!</div>)}
                 </div>
             </div>
         );

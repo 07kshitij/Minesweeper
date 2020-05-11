@@ -41,7 +41,6 @@ ol, ul {
   display: table;
 }
 
-
 .square {
   background: #cbcbcb;
   border: 1px solid #999;
@@ -74,11 +73,42 @@ ol, ul {
   overflow-x: hidden;
 }
 
-.left{
+.left {
   left: 10%;
   right: 50%;
 }
-.right{
+
+.right {
   left: 50%;
   margin-top: 70px;
+}
+
+.result {
+  font: bold;
+  font-size: 20px;
+  color: red;
+}
+
+.moves {
+  font-size: 20px;
+}
+
+.Timer-header {
+  font-size: 25px;
+  color: mediumblue;
+}
+
+.Timer-display {
+  font-size: 20px;
+}
+
+.actionButton {
+  font-size: 20px;
+  border-radius: 2px;
+  transition-duration: 0.3s;
+}
+
+.actionButton:hover {
+  background-color: slategray;
+  color: azure;
 }

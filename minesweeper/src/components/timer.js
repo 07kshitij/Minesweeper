@@ -37,7 +37,6 @@ class Timer extends React.Component {
     }
 
     render() {
-        this.startTimer.bind(this);
         const { timerTime } = this.state;
         console.log(timerTime);
         let sec = ("0" + (Math.floor(timerTime / 1000) % 60)).slice(-2);
@@ -50,16 +49,16 @@ class Timer extends React.Component {
                     {hrs} : {min} : {sec}
                 </div>
                 {this.state.timerOn === false && this.state.timerTime === 0 && (
-                    <button onClick={this.startTimer.bind(this)}>Start</button>
+                    <button className = "actionButton" onClick={this.startTimer.bind(this)}>Start</button>
                 )}
                 {this.state.timerOn === true && (
-                    <button onClick={this.stopTimer.bind(this)}>Stop</button>
+                    <button className = "actionButton" onClick={this.stopTimer.bind(this)}>Stop</button>
                 )}
                 {this.state.timerOn === false && this.state.timerTime > 0 && (
-                    <button onClick={this.startTimer.bind(this)}>Resume</button>
+                    <button className = "actionButton" onClick={this.startTimer.bind(this)}>Resume</button>
                 )}
                 {this.state.timerOn === false && this.state.timerTime > 0 && (
-                    <button onClick={this.resetTimer.bind(this)}>Reset</button>
+                    <button className = "actionButton" onClick={this.resetTimer.bind(this)}>Reset</button>
                 )}
             </div>
         );
