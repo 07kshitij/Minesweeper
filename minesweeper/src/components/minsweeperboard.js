@@ -218,7 +218,7 @@ class MinesweeperBoard extends React.Component {
                     {this.createGrid()}
                 </div>
                 <div className="split right">
-                    <Timer />
+                    <Timer gameActive = {this.state.gameActive}/>
                     <br />
                     <div className = "moves">Moves : {this.state.moves}</div>                    
                     <br />
