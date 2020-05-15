@@ -91,6 +91,18 @@ class MinesweeperBoard extends React.Component {
         this.props.history.push('/');
     }
 
+    handleContextMenu(i, event) {
+        event.preventDefault();
+        if (this.state.gameActive) { // Checks if you've previously stepped on a mine
+            const square = this.state.grid.slice();
+            square[i] = 'X';
+            this.setState({
+                moves: this.state.moves + 1,
+                grid: square,
+            })
+        }
+    }
+
     handleClick(i) {
         if (this.state.gameActive) { // Checks if you've previously stepped on a mine
             const square = this.state.grid.slice();
@@ -100,6 +112,7 @@ class MinesweeperBoard extends React.Component {
             this.setState({
                 moves: this.state.moves + 1
             })
+            console.log(colors[i]);
             if (colors[i] === 'white') {
                 this.showHints(i);
             } else {
@@ -125,7 +138,7 @@ class MinesweeperBoard extends React.Component {
 
         var visited = Array(size * size).fill(false); visited[i] = true;
 
-        var items = []; items.push(i);
+        var items = []; if (this.state.grid[i] !== 'X') items.push(i);
         var stack = new Stack();
         stack.insert(i);
 
@@ -140,7 +153,8 @@ class MinesweeperBoard extends React.Component {
                 if (x >= 0 && x < size && y >= 0 && y < size) {
                     if (visited[size * x + y] === false && this.state.mines[size * x + y] === 0) {
                         visited[size * x + y] = true;
-                        items.push(size * x + y);
+                        if (this.state.grid[size * x + y] !== 'X')
+                            items.push(size * x + y);
                         if (this.state.adjacent[size * x + y] === 0) {
                             stack.insert(size * x + y);
                         }
@@ -163,17 +177,12 @@ class MinesweeperBoard extends React.Component {
     }
 
     renderSquare(i) {
-        return (<Square
-            value={this.state.grid[i]}
-            onClick={() => this.handleClick(i)}
-            color={this.state.bgColors[i]} />
-        );
-    }
-
-    renderSolution(i) {
-        return (<Square
-            value={this.state.mines[i]}
-            onClick={() => this.handleClick(i)} />
+        return (
+            <Square
+                value={this.state.grid[i]}
+                onClick={this.handleClick.bind(this, i)}
+                onContextMenu={this.handleContextMenu.bind(this, i)}
+                color={this.state.bgColors[i]} />
         );
     }
 
@@ -186,19 +195,6 @@ class MinesweeperBoard extends React.Component {
             let child = [];
             for (let j = 0; j < size; j++) {
                 child.push(this.renderSquare(i * size + j));
-            }
-            table.push(<div className="board-row"><center>{child}</center></div>);
-        }
-        return (table);
-    }
-
-    showSolution() {
-        const size = this.state.size;
-        let table = [];
-        for (let i = 0; i < size; i++) {
-            let child = [];
-            for (let j = 0; j < size; j++) {
-                child.push(this.renderSolution(i * size + j));
             }
             table.push(<div className="board-row"><center>{child}</center></div>);
         }
@@ -218,13 +214,13 @@ class MinesweeperBoard extends React.Component {
                     {this.createGrid()}
                 </div>
                 <div className="split right">
-                    <Timer gameActive = {this.state.gameActive}/>
+                    <Timer gameActive={this.state.gameActive} />
                     <br />
-                    <div className = "moves">Moves : {this.state.moves}</div>                    
+                    <div className="moves">Moves : {this.state.moves}</div>
                     <br />
-                    <button className = "actionButton" onClick={this.refershPage.bind(this)}>Start Over</button>
+                    <button className="actionButton" onClick={this.refershPage.bind(this)}>Start Over</button>
                     <br /><br />
-                    <button className = "actionButton" onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
+                    <button className="actionButton" onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
                     <br /><br />
                     {this.state.gameActive === false && (<div className="result">Sorry You lost !!</div>)}
                 </div>

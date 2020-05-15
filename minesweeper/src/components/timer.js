@@ -37,7 +37,6 @@ class Timer extends React.Component {
         let sec = ("0" + (Math.floor(timerTime / 1000) % 60)).slice(-2);
         let min = ("0" + (Math.floor(timerTime / 60000) % 60)).slice(-2);
         let hrs = ("0" + (Math.floor(timerTime / 3600000))).slice(-2);
-        console.log(this.props.gameActive, this.timer);
         if(this.props.gameActive){
             return (
                 <div className="Timer">
@@ -58,7 +57,8 @@ class Timer extends React.Component {
         }else{
             return(
                 <div className="Timer">
-                    <div className="Timer-header">Timer</div>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+                    <i class="fa fa-clock-o"  style = {{'font-size':'36px'}}></i>
                     <div className="Timer-display">
                         {hrs} : {min} : {sec}
                     </div>

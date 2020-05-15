@@ -5,7 +5,8 @@ class Square extends React.Component {
         return (
             <button
                 className="square"
-                onClick={() => this.props.onClick()}
+                onClick={this.props.onClick.bind(this)}
+                onContextMenu={this.props.onContextMenu.bind(this)}
                 style={{background : this.props.color}}>
                 {this.props.value}
             </button>
