@@ -83,10 +83,16 @@ ol, ul {
   margin-top: 70px;
 }
 
-.result {
+.loss {
   font: bold;
   font-size: 20px;
   color: red;
+}
+
+.win {
+  font: bold;
+  font-size: 20px;
+  color: green;
 }
 
 .moves {

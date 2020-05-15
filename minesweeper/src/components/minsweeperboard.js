@@ -16,8 +16,6 @@ class MinesweeperBoard extends React.Component {
             // Check if state is cached
         }
 
-        console.log(prop, null, prop === null);
-
         if (prop === null) { // neither cached, nor passed from homepage
             this.props.history.push('/404');
             return (undefined);
@@ -32,9 +30,10 @@ class MinesweeperBoard extends React.Component {
             adjacent: Array(size * size).fill(0),
             bgColors: Array(size * size).fill('#cbcbcb'),
             gameActive: true,
+            gameWon: false,
             moves: 0,
+            correctMines: 0,
         }
-        // this.handleAlert = this.handleAlert.bind(this);
 
         localStorage.setItem('state', JSON.stringify(this.state.size));
         this.placeMines();
@@ -48,8 +47,17 @@ class MinesweeperBoard extends React.Component {
             var position = Math.floor(Math.random() * size * size);
             square[position] = 1;
         }
-        // eslint-disable-next-line
+        // BAD
+        // eslint-disable-next-line 
         this.state.mines = square;
+        var count = 0;
+        for (let i = 0; i < size * size; i++) {
+            count += square[i];
+        }
+        // BAD
+        // eslint-disable-next-line 
+        this.state.mineCnt = count;
+        console.log(this.state.mineCnt);
         this.setAdjacent();
     }
 
@@ -76,12 +84,9 @@ class MinesweeperBoard extends React.Component {
             }
             square[position] = count;
         }
+
         this.setState({ adjacent: square });
     }
-
-    // handleAlert() {
-    //     alert(" Oops.. You stepped on a Mine !!\n ~~~ Game Over ~~~ ");
-    // }
 
     refershPage() {
         window.location.reload(false);
@@ -91,15 +96,36 @@ class MinesweeperBoard extends React.Component {
         this.props.history.push('/');
     }
 
+    checkGameWon() {
+        console.log("Correct Mines = ", this.state.correctMines, "Total Mines = ", this.state.mineCnt);
+        if (this.state.correctMines === this.state.mineCnt) {
+            this.setState({
+                gameActive: false,
+                gameWon: true
+            })
+        }
+    }
+
     handleContextMenu(i, event) {
         event.preventDefault();
         if (this.state.gameActive) { // Checks if you've previously stepped on a mine
             const square = this.state.grid.slice();
-            square[i] = 'X';
+            const prevState = square[i];
+            square[i] = (square[i] === '?') ? '' : ((square[i] === 'X') ? '?' : 'X');
+            var count = this.state.correctMines;
+            if (square[i] === 'X' && this.state.mines[i]) {
+                count += 1;
+            } else if (prevState === 'X' && this.state.mines[i]) {
+                count -= 1;
+            }
+            // BAD
+            // eslint-disable-next-line
+            this.state.correctMines = count;
             this.setState({
                 moves: this.state.moves + 1,
                 grid: square,
-            })
+            });
+            this.checkGameWon();
         }
     }
 
@@ -112,14 +138,24 @@ class MinesweeperBoard extends React.Component {
             this.setState({
                 moves: this.state.moves + 1
             })
-            console.log(colors[i]);
             if (colors[i] === 'white') {
                 this.showHints(i);
             } else {
                 const size = this.state.size;
                 for (var k = 0; k < size * size; k++) {
                     if (this.state.mines[k]) {
-                        square[k] = 'M'; colors[k] = 'red';
+                        if (square[k] === null || square[k] === '') {
+                            colors[k] = 'red';
+                        } else {
+                            if (square[k] === 'X') {
+                                colors[k] = 'green';
+                            } else {
+                                colors[k] = 'red';
+                            }
+                        }
+                        square[k] = 'M';
+                    } else if (square[k] === 'X') {
+                        colors[k] = 'red';
                     }
                 }
                 this.setState({
@@ -127,8 +163,8 @@ class MinesweeperBoard extends React.Component {
                     bgColors: colors,
                     gameActive: false
                 });
-                // this.handleAlert();
             }
+            this.checkGameWon();
         }
     }
 
@@ -222,7 +258,8 @@ class MinesweeperBoard extends React.Component {
                     <br /><br />
                     <button className="actionButton" onClick={this.changeDifficulty.bind(this)}>Change Board Size</button>
                     <br /><br />
-                    {this.state.gameActive === false && (<div className="result">Sorry You lost !!</div>)}
+                    {this.state.gameActive === false && this.state.gameWon === false && (<div className="loss">Sorry You lost !!</div>)}
+                    {this.state.gameActive === false && this.state.gameWon === true && (<div className="win">Yayy !! You Won !!</div>)}
                 </div>
             </div>
         );
